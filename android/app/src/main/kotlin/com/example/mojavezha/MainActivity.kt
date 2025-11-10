@@ -1,6 +1,7 @@
 package com.example.mojavezha
 
 import android.content.Intent
+import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.provider.Settings
@@ -19,6 +20,7 @@ class MainActivity : FlutterActivity() {
                 call,
                 result ->
             when (call.method) {
+                // 🔹 خواندن مجوزهای اپ
                 "getAppPermissions" -> {
                     val pkg = call.argument<String>("packageName")
                     if (pkg == null) {
@@ -28,13 +30,19 @@ class MainActivity : FlutterActivity() {
                     val map = getPermissionsForPackage(pkg)
                     result.success(map)
                 }
+
+                // 🔹 باز کردن تنظیمات اپ
                 "openAppSettings" -> {
                     val pkg = call.argument<String>("packageName")
                     if (pkg != null) {
                         openAppSettings(pkg)
                         result.success(true)
-                    } else result.error("NO_PKG", "No packageName provided", null)
+                    } else {
+                        result.error("NO_PKG", "No packageName provided", null)
+                    }
                 }
+
+                // 🔹 تغییر مجوز در صورت Device Owner بودن
                 "setAppPermission" -> {
                     val pkg = call.argument<String>("packageName")
                     val permission = call.argument<String>("permission")
@@ -46,11 +54,34 @@ class MainActivity : FlutterActivity() {
                         result.success(ok)
                     }
                 }
+
+                // 🔹 دریافت اطلاعات اپ (برای Regex تشخیص سیستم اپ)
+                "getAppInfo" -> {
+                    val pkg = call.argument<String>("packageName")
+                    if (pkg != null) {
+                        try {
+                            val pm: PackageManager = applicationContext.packageManager
+                            val appInfo: ApplicationInfo = pm.getApplicationInfo(pkg, 0)
+                            val map =
+                                    mapOf(
+                                            "sourceDir" to appInfo.sourceDir,
+                                            "packageName" to appInfo.packageName,
+                                            "flags" to appInfo.flags
+                                    )
+                            result.success(map)
+                        } catch (e: Exception) {
+                            result.error("ERROR", e.message, null)
+                        }
+                    } else {
+                        result.error("NO_PKG", "No packageName provided", null)
+                    }
+                }
                 else -> result.notImplemented()
             }
         }
     }
 
+    // 🔹 خواندن مجوزهای اپلیکیشن
     private fun getPermissionsForPackage(packageName: String): Map<String, Boolean> {
         val pm = applicationContext.packageManager
         return try {
@@ -68,6 +99,7 @@ class MainActivity : FlutterActivity() {
         }
     }
 
+    // 🔹 باز کردن تنظیمات اپ
     private fun openAppSettings(packageName: String) {
         val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
         intent.data = Uri.fromParts("package", packageName, null)
@@ -75,12 +107,13 @@ class MainActivity : FlutterActivity() {
         startActivity(intent)
     }
 
+    // 🔹 تغییر مجوز در صورت Device Owner بودن
     private fun trySetPermissionAsDeviceOwner(
             pkg: String,
             permission: String,
             grant: Boolean
     ): Boolean {
-        try {
+        return try {
             val dpm =
                     getSystemService(DEVICE_POLICY_SERVICE) as android.app.admin.DevicePolicyManager
             val comp = null // اگر DeviceAdminReceiver داری، اینجا بذار
@@ -89,10 +122,10 @@ class MainActivity : FlutterActivity() {
                     else android.app.admin.DevicePolicyManager.PERMISSION_GRANT_STATE_DENIED
 
             dpm.setPermissionGrantState(comp, pkg, permission, mode)
-            return true
+            true
         } catch (e: Exception) {
             e.printStackTrace()
-            return false
+            false
         }
     }
 }

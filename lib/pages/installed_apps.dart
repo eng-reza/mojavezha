@@ -22,6 +22,9 @@ class _InstalledAppsPageState extends State<InstalledAppsPage>
   @override
   bool get wantKeepAlive => true;
 
+  // کش نگهداری وضعیت ایتکه اپ ها سیستمی هستند یا کاربری //
+  Map<String, bool> systemAppCache = {};
+
   final Logger logger = Logger();
   List<AppInfo> apps = [];
   Map<String, Map<String, bool>> appPermissionStates = {};
@@ -29,6 +32,10 @@ class _InstalledAppsPageState extends State<InstalledAppsPage>
   bool loading = true;
   String searchQuery = '';
   bool showAdvanced = false;
+  final RegExp systemAppRegex = RegExp(
+    r'^(com\.android\.|com\.google\.|com\.samsung\.|com\.huawei\.)',
+    caseSensitive: false,
+  );
 
   @override
   void initState() {
@@ -37,13 +44,31 @@ class _InstalledAppsPageState extends State<InstalledAppsPage>
     // await Permission.manageExternalStorage.request();
   }
 
+  Future<bool> isSystemAppRegex(String packageName) async {
+    try {
+      return systemAppRegex.hasMatch(packageName);
+    } catch (e) {
+      logger.e('Failed to check system app via regex: $e');
+    }
+    return false;
+  }
+
   Future<void> loadApps() async {
     setState(() => loading = true);
     try {
       final list = await InstalledApps.getInstalledApps(withIcon: true);
       list.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
       apps = filteredApps = list;
-
+      for (final app in list) {
+        try {
+          // تشخیص اپ سیستمی یا نصب شده توسط کاربر  با رجکس //
+          final isSystem = await isSystemAppRegex(app.packageName);
+          systemAppCache[app.packageName] = isSystem;
+        } catch (e) {
+          systemAppCache[app.packageName] = false;
+          logger.e('Failed to check if system app: $e');
+        }
+      }
       // دریافت مجوزها بدون setState مکرر
       for (var app in list) {
         try {
@@ -86,13 +111,6 @@ class _InstalledAppsPageState extends State<InstalledAppsPage>
     });
   }
 
-  bool _isSystemApp(String pkg) {
-    final RegExp systemAppRegex = RegExp(
-      r'(com\.android|android\.|com\.google\.android|\.android)',
-    );
-    return systemAppRegex.hasMatch(pkg.toLowerCase());
-  }
-
   Widget _buildAppList(List<AppInfo> list) {
     if (loading) {
       return Center(
@@ -132,11 +150,13 @@ class _InstalledAppsPageState extends State<InstalledAppsPage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
+
+    /// دراین نقطه با کمک لیست کش شده تشخیث میدهد اپ ها سیستمی هستند یا کاربر نصب کرده ///
     final systemApps = filteredApps
-        .where((a) => _isSystemApp(a.packageName))
+        .where((a) => systemAppCache[a.packageName] == true)
         .toList();
     final userApps = filteredApps
-        .where((a) => !_isSystemApp(a.packageName))
+        .where((a) => systemAppCache[a.packageName] == false)
         .toList();
 
     return DefaultTabController(
