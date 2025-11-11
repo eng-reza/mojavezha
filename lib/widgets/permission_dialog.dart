@@ -98,7 +98,7 @@ void showPermissionsDialog(
                           title: InkWell(
                             onTap: () {
                               logger.i('همه مجوزها ${perms.keys.length}');
-                              writeDeviceLog(perms.toString());
+                              // writeDeviceLog(perms.toString());
                               _showPermDetailDialog(context, info, perm);
                             },
 

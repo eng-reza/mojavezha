@@ -9,12 +9,18 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       body: Center(
         child: Column(
-          spacing: 30,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Center(
+              child: Image.asset(
+                'assets/images/mojavezha.png',
+                width: 200,
+                height: 200,
+              ),
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              spacing: 20,
+              spacing: 50,
               children: [
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(

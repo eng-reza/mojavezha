@@ -121,7 +121,7 @@ class _InstalledAppsPageState extends State<InstalledAppsPage>
     if (loading) {
       return Center(
         child: Lottie.asset(
-          'assets/json/Loading animation.json',
+          'assets/json/Material wave loading.json',
           width: 200,
           height: 200,
         ),
