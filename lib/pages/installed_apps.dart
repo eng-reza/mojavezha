@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:installed_apps/app_info.dart';
 import 'package:installed_apps/installed_apps.dart';
 import 'package:logger/logger.dart';
+import 'package:mojavezha/util/default_apps.dart';
 import 'package:mojavezha/widgets/permission_dialog.dart';
 import '../widgets/app_card.dart';
 import 'package:lottie/lottie.dart';
@@ -33,7 +34,7 @@ class _InstalledAppsPageState extends State<InstalledAppsPage>
   String searchQuery = '';
   bool showAdvanced = false;
   final RegExp systemAppRegex = RegExp(
-    r'^(com\.android\.|com\.google\.|com\.samsung\.|com\.huawei\.)',
+    r'^(com\.sec|com\.android\.|com\.google\.|com\.samsung\.|com\.huawei\.)',
     caseSensitive: false,
   );
 
@@ -46,7 +47,11 @@ class _InstalledAppsPageState extends State<InstalledAppsPage>
 
   Future<bool> isSystemAppRegex(String packageName) async {
     try {
-      return systemAppRegex.hasMatch(packageName);
+      // اول با رجکس داخل systemAppRegex چک میکنه //
+      if (systemAppRegex.hasMatch(packageName)) return true;
+
+      // بعدش با رشته های فایل defaultApps چک میکنه //
+      if (defaultApps.contains(packageName)) return true;
     } catch (e) {
       logger.e('Failed to check system app via regex: $e');
     }
@@ -58,6 +63,7 @@ class _InstalledAppsPageState extends State<InstalledAppsPage>
     try {
       final list = await InstalledApps.getInstalledApps(withIcon: true);
       list.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+
       apps = filteredApps = list;
       for (final app in list) {
         try {
@@ -115,7 +121,7 @@ class _InstalledAppsPageState extends State<InstalledAppsPage>
     if (loading) {
       return Center(
         child: Lottie.asset(
-          'assets/json/Loading animation blue.json',
+          'assets/json/Loading animation.json',
           width: 200,
           height: 200,
         ),
@@ -208,8 +214,8 @@ class _InstalledAppsPageState extends State<InstalledAppsPage>
                   const TabBar(
                     indicatorColor: Colors.red,
                     tabs: [
-                      Tab(icon: Icon(Icons.person), text: 'کاربری'),
-                      Tab(icon: Icon(Icons.settings), text: 'سیستمی'),
+                      Tab(icon: Icon(Icons.person), text: 'نصب شده توسط کاربر'),
+                      Tab(icon: Icon(Icons.settings), text: 'پیشفرض سیستم'),
                     ],
                   ),
                 ],

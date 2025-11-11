@@ -642,7 +642,7 @@ PermissionInfo translatePermission(String permission) {
     RegExp(
       r'com.samsung.android.knox.permission.KNOX_CCM_KEYSTORE',
     ): PermissionInfo(
-      'کیف پول ناکس',
+      'مخزن کلیدهای ناکس',
       Icons.security_outlined,
       'دسترسی به سیستم امنیتی ناکس',
     ),
