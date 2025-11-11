@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:mojavezha/pages/home_page.dart';
 import 'pages/installed_apps.dart';
+import 'pages/per_module.dart';
 
 void main() => runApp(const MyApp());
 
@@ -23,7 +25,12 @@ class MyApp extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
 
-      home: InstalledAppsPage(),
+      initialRoute: '/home',
+      routes: {
+        '/home': (context) => const HomePage(),
+        '/installedApps': (context) => InstalledAppsPage(),
+        '/perModule': (context) => PerModule(),
+      },
     );
   }
 }
