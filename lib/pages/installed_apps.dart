@@ -42,7 +42,6 @@ class _InstalledAppsPageState extends State<InstalledAppsPage>
   void initState() {
     super.initState();
     loadApps();
-    // await Permission.manageExternalStorage.request();
   }
 
   Future<bool> isSystemAppRegex(String packageName) async {
