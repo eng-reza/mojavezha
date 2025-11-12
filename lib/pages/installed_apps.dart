@@ -169,7 +169,6 @@ class _InstalledAppsPageState extends State<InstalledAppsPage>
       child: SafeArea(
         child: Scaffold(
           appBar: AppBar(
-            automaticallyImplyLeading: false,
             title: const Text('مدیریت مجوزها'),
             centerTitle: true,
             bottom: PreferredSize(
