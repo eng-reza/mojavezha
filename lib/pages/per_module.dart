@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:logger/logger.dart';
 import 'package:flutter/material.dart';
@@ -31,28 +33,73 @@ class _PerModuleState extends State<PerModule> {
     final size = MediaQuery.of(context).size;
     bool isPhone = size.width < 600;
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: Text(
-          'بررسی مجوزها بر اساس نوع دسترسی',
-          style: TextStyle(fontSize: isPhone ? 20 : 30),
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+
+        title: Stack(
+          children: [
+            // لایه بیرونی (خط دور)
+            Text(
+              'بررسی مجوزها بر اساس نوع دسترسی',
+              style: TextStyle(
+                fontSize: isPhone ? 20 : 30,
+                foreground: Paint()
+                  ..style = PaintingStyle.stroke
+                  ..strokeWidth =
+                      1 // ضخامت قاب
+                  ..color = Colors.white, // رنگ قاب
+              ),
+            ),
+            // لایه درونی (متن اصلی)
+            Text(
+              'بررسی مجوزها بر اساس نوع دسترسی',
+              style: TextStyle(
+                fontSize: isPhone ? 20 : 30,
+                color: Colors.black, // رنگ متن
+              ),
+            ),
+          ],
         ),
+
         centerTitle: true,
       ),
       body: loading
-          ? Center(
-              child: Lottie.asset(
-                'assets/json/Material wave loading.json',
-                width: 200,
-                height: 200,
+          ? Container(
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Colors.lightBlueAccent, Colors.blue.shade700],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
+              ),
+              child: Center(
+                child: Lottie.asset(
+                  'assets/json/Material wave loading.json',
+                  width: 200,
+                  height: 200,
+                ),
               ),
             )
-          : Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(height: isPhone ? 50 : 100),
-                  Expanded(child: _buildPermissionList(isPhone)),
-                ],
+          : Container(
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Colors.lightBlueAccent, Colors.blue.shade700],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
+              ),
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(height: isPhone ? 50 : 100),
+                    Expanded(child: _buildPermissionList(isPhone)),
+                  ],
+                ),
               ),
             ),
     );
@@ -153,27 +200,40 @@ class _PerModuleState extends State<PerModule> {
 
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blue.shade700,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(18),
-              ),
-              elevation: 3,
-            ),
-            onPressed: () => _showAppsForPermission(permKey, permName),
-            child: Row(
-              children: [
-                Icon(permissionsIcon[permKey], color: Colors.white, size: 25),
-                const SizedBox(width: 8),
-                Flexible(
-                  child: Text(
-                    permName.isNotEmpty ? permName : permKey,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(color: Colors.white, fontSize: 14),
+          child: ClipRRect(
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  side: BorderSide(color: Colors.white),
+                  backgroundColor: Colors.transparent,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18),
                   ),
+                  // elevation: 3,
                 ),
-              ],
+                onPressed: () => _showAppsForPermission(permKey, permName),
+                child: Row(
+                  children: [
+                    Icon(
+                      permissionsIcon[permKey],
+                      color: Colors.white,
+                      size: 25,
+                    ),
+                    const SizedBox(width: 8),
+                    Flexible(
+                      child: Text(
+                        permName.isNotEmpty ? permName : permKey,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
         );
