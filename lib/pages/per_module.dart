@@ -28,9 +28,14 @@ class _PerModuleState extends State<PerModule> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    bool isPhone = size.width < 600;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('بررسی مجوزها بر اساس نوع دسترسی'),
+        title: Text(
+          'بررسی مجوزها بر اساس نوع دسترسی',
+          style: TextStyle(fontSize: isPhone ? 20 : 30),
+        ),
         centerTitle: true,
       ),
       body: loading
@@ -45,8 +50,8 @@ class _PerModuleState extends State<PerModule> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const SizedBox(height: 100),
-                  Expanded(child: _buildPermissionList()),
+                  SizedBox(height: isPhone ? 50 : 100),
+                  Expanded(child: _buildPermissionList(isPhone)),
                 ],
               ),
             ),
@@ -95,24 +100,23 @@ class _PerModuleState extends State<PerModule> {
     }
   }
 
-  Widget _buildPermissionList() {
+  Widget _buildPermissionList(bool isPhone) {
     final Map<String, String> PermissionsName = {
-      'android.permission.FOREGROUND_SERVICE_CAMERA': 'دسترسی به دوربین',
-      'android.permission.FOREGROUND_SERVICE_MICROPHONE': 'دسترسی به میکروفن',
-      'android.permission.FOREGROUND_SERVICE_LOCATION': 'دسترسی به لوکیشن',
-      'android.permission.WRITE_EXTERNAL_STORAGE': 'نوشتن در حافظه دستگاه',
-      'android.permission.MANAGE_EXTERNAL_STORAGE': 'مدیریت حافظه دستگاه',
-      'android.permission.POST_NOTIFICATIONS': 'ارسال و پردازش اعلان ها',
-      'android.permission.READ_CONTACTS': 'دسترسی به مخاطبین',
-      'android.permission.FOREGROUND_SERVICE_PHONE_CALL':
-          'دسترسی به سرویس برقراری تماس',
-      'android.permission.ACCESS_WIFI_STATE': 'دسترسی به شبکه وای فای',
+      'android.permission.FOREGROUND_SERVICE_CAMERA': 'دوربین',
+      'android.permission.FOREGROUND_SERVICE_MICROPHONE': 'میکروفن',
+      'android.permission.FOREGROUND_SERVICE_LOCATION': 'لوکیشن',
+      'android.permission.WRITE_EXTERNAL_STORAGE': 'نوشتن در حافظه',
+      'android.permission.MANAGE_EXTERNAL_STORAGE': 'مدیریت حافظه',
+      'android.permission.POST_NOTIFICATIONS': 'اعلان ها',
+      'android.permission.READ_CONTACTS': 'مخاطبین',
+      'android.permission.FOREGROUND_SERVICE_PHONE_CALL': 'برقراری تماس',
+      'android.permission.ACCESS_WIFI_STATE': 'WIFI',
       // 'android.permission.ACCESS_NETWORK_STATE': 'دسترسی به اینترنت همراه',
-      'android.permission.INTERNET': 'دسترسی به اینترنت',
-      'android.permission.RECORD_AUDIO': 'دسترسی به ضبط صدا',
-      'android.permission.MANAGE_ACCOUNTS': 'دسترسی به حساب های کاربری',
-      'android.permission.NFC': 'دسترسی به ماژول NFC',
-      'android.permission.READ_BASIC_PHONE_STATE': 'اطلاعات پایه ای تلفن',
+      'android.permission.INTERNET': 'اینترنت',
+      'android.permission.RECORD_AUDIO': 'ضبط صدا',
+      'android.permission.MANAGE_ACCOUNTS': 'حساب کاربری',
+      'android.permission.NFC': 'NFC',
+      'android.permission.READ_BASIC_PHONE_STATE': 'اطلاعات تلفن',
     };
 
     final Map<String, IconData> permissionsIcon = {
@@ -136,11 +140,11 @@ class _PerModuleState extends State<PerModule> {
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
-        crossAxisSpacing: 20,
-        mainAxisSpacing: 20,
-        childAspectRatio: 4,
+        crossAxisSpacing: isPhone ? 5 : 15,
+        mainAxisSpacing: isPhone ? 30 : 40,
+        childAspectRatio: isPhone ? 3 : 2,
       ),
       itemCount: entries.length,
       itemBuilder: (context, index) {
@@ -148,7 +152,7 @@ class _PerModuleState extends State<PerModule> {
         final permName = entries[index].value;
 
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 10),
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.blue.shade700,
