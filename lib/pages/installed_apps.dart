@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
@@ -154,6 +156,8 @@ class _InstalledAppsPageState extends State<InstalledAppsPage>
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    bool isPhone = size.width < 600;
     super.build(context);
 
     /// دراین نقطه با کمک لیست کش شده تشخیث میدهد اپ ها سیستمی هستند یا کاربر نصب کرده ///
@@ -167,62 +171,123 @@ class _InstalledAppsPageState extends State<InstalledAppsPage>
     return DefaultTabController(
       length: 2,
       child: SafeArea(
-        child: Scaffold(
-          appBar: AppBar(
-            title: const Text('مدیریت مجوزها'),
-            centerTitle: true,
-            bottom: PreferredSize(
-              preferredSize: const Size.fromHeight(150),
-              child: Column(
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.lightBlueAccent, Colors.blue.shade700],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+          ),
+          child: Scaffold(
+            backgroundColor: Colors.transparent,
+            appBar: AppBar(
+              backgroundColor: Colors.transparent,
+              title: Stack(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 8,
-                    ),
-                    child: TextField(
-                      onChanged: _onSearchChanged,
-                      decoration: InputDecoration(
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        hintText: 'جست‌وجوی برنامه...',
-                        prefixIcon: const Icon(Icons.search),
-                        suffixIcon: IconButton(
-                          icon: const Icon(Icons.refresh),
-                          onPressed: () {
-                            _onSearchChanged('');
-                            loadApps();
-                          },
-                        ),
-                        filled: true,
-                        fillColor: Theme.of(context).cardColor,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide.none,
-                        ),
-                        contentPadding: const EdgeInsets.symmetric(vertical: 0),
-                      ),
+                  // لایه بیرونی (خط دور)
+                  Text(
+                    'بررسی مجوزها بر اساس نرم افزار',
+                    style: TextStyle(
+                      fontSize: isPhone ? 20 : 30,
+                      foreground: Paint()
+                        ..style = PaintingStyle.stroke
+                        ..strokeWidth =
+                            1 // ضخامت قاب
+                        ..color = Colors.white, // رنگ قاب
                     ),
                   ),
-                  const SizedBox(height: 10),
-                  const TabBar(
-                    indicatorColor: Colors.red,
-                    tabs: [
-                      Tab(icon: Icon(Icons.person), text: 'نصب شده توسط کاربر'),
-                      Tab(icon: Icon(Icons.settings), text: 'پیشفرض سیستم'),
-                    ],
+                  // لایه درونی (متن اصلی)
+                  Text(
+                    'بررسی مجوزها بر اساس نرم افزار',
+                    style: TextStyle(
+                      fontSize: isPhone ? 20 : 30,
+                      color: Colors.black, // رنگ متن
+                    ),
                   ),
                 ],
               ),
+              centerTitle: true,
+              bottom: PreferredSize(
+                preferredSize: const Size.fromHeight(150),
+                child: Container(
+                  decoration: const BoxDecoration(color: Colors.transparent),
+                  alignment: Alignment.center,
+                  child: ClipRRect(
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 8,
+                            ),
+                            child: TextField(
+                              onChanged: _onSearchChanged,
+                              decoration: InputDecoration(
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                hintText: 'جست‌وجوی برنامه...',
+                                prefixIcon: const Icon(Icons.search),
+                                suffixIcon: IconButton(
+                                  icon: const Icon(Icons.refresh),
+                                  onPressed: () {
+                                    _onSearchChanged('');
+                                    loadApps();
+                                  },
+                                ),
+                                filled: true,
+                                fillColor: Colors.white.withOpacity(0.3),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: BorderSide.none,
+                                ),
+                                contentPadding: const EdgeInsets.symmetric(
+                                  vertical: 0,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          TabBar(
+                            indicatorColor: Colors.red,
+                            tabs: const [
+                              Tab(
+                                icon: Icon(Icons.person),
+                                text: 'نصب شده توسط کاربر',
+                              ),
+                              Tab(
+                                icon: Icon(Icons.settings),
+                                text: 'پیشفرض سیستم',
+                              ),
+                            ],
+                            // Added const above and moved indicatorColor here
+                            // set labelColor and unselectedLabelColor if needed
+                            // background color is transparent by default
+                            // but can be set here if needed
+                            // backgroundColor: Colors.transparent,
+                            // indicatorColor: Colors.red,
+                            // labelColor: Colors.white,
+                            // unselectedLabelColor: Colors.white70,
+                            // This is optional and can be customized
+                            // But per instruction, only fillColor is changed in TextField and bottom container color is transparent
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             ),
-          ),
-          body: TabBarView(
-            dragStartBehavior: DragStartBehavior.start,
-            children: [_buildAppList(userApps), _buildAppList(systemApps)],
+            body: TabBarView(
+              dragStartBehavior: DragStartBehavior.start,
+              children: [_buildAppList(userApps), _buildAppList(systemApps)],
+            ),
           ),
         ),
       ),

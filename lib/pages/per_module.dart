@@ -30,6 +30,10 @@ class _PerModuleState extends State<PerModule> {
 
   @override
   Widget build(BuildContext context) {
+    final media = MediaQuery.of(context);
+    final phoneOnPortrait =
+        media.size.width < 600 && media.orientation == Orientation.landscape;
+
     final size = MediaQuery.of(context).size;
     bool isPhone = size.width < 600;
     return Scaffold(
@@ -96,8 +100,8 @@ class _PerModuleState extends State<PerModule> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SizedBox(height: isPhone ? 50 : 100),
-                    Expanded(child: _buildPermissionList(isPhone)),
+                    SizedBox(height: phoneOnPortrait ? 50 : 30),
+                    Expanded(child: _buildPermissionList(context)),
                   ],
                 ),
               ),
@@ -147,7 +151,10 @@ class _PerModuleState extends State<PerModule> {
     }
   }
 
-  Widget _buildPermissionList(bool isPhone) {
+  Widget _buildPermissionList(BuildContext context) {
+    final media = MediaQuery.of(context);
+    final phoneOnPortrait =
+        media.size.width < 600 && media.orientation == Orientation.portrait;
     final Map<String, String> PermissionsName = {
       'android.permission.FOREGROUND_SERVICE_CAMERA': 'دوربین',
       'android.permission.FOREGROUND_SERVICE_MICROPHONE': 'میکروفن',
@@ -178,20 +185,21 @@ class _PerModuleState extends State<PerModule> {
       'android.permission.ACCESS_WIFI_STATE': Icons.wifi,
       // 'android.permission.ACCESS_NETWORK_STATE': 'دسترسی به اینترنت همراه',
       'android.permission.INTERNET': FontAwesomeIcons.internetExplorer,
-      'android.permission.RECORD_AUDIO': FontAwesomeIcons.audioDescription,
+      'android.permission.RECORD_AUDIO': FontAwesomeIcons.recordVinyl,
       'android.permission.MANAGE_ACCOUNTS': Icons.account_box_sharp,
       'android.permission.NFC': Icons.nfc_sharp,
       'android.permission.READ_BASIC_PHONE_STATE': Icons.info_sharp,
     };
     final entries = PermissionsName.entries.toList();
+
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        crossAxisSpacing: isPhone ? 5 : 15,
-        mainAxisSpacing: isPhone ? 30 : 40,
-        childAspectRatio: isPhone ? 3 : 2,
+        crossAxisCount: phoneOnPortrait ? 2 : 4,
+        crossAxisSpacing: phoneOnPortrait ? 5 : 10,
+        mainAxisSpacing: phoneOnPortrait ? 15 : 20,
+        childAspectRatio: phoneOnPortrait ? 3 : 4,
       ),
       itemCount: entries.length,
       itemBuilder: (context, index) {
@@ -218,16 +226,16 @@ class _PerModuleState extends State<PerModule> {
                     Icon(
                       permissionsIcon[permKey],
                       color: Colors.white,
-                      size: 25,
+                      size: 22,
                     ),
                     const SizedBox(width: 8),
                     Flexible(
                       child: Text(
                         permName.isNotEmpty ? permName : permKey,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: Colors.black,
-                          fontSize: 14,
+                          fontSize: phoneOnPortrait ? 15 : 18,
                         ),
                       ),
                     ),
@@ -248,7 +256,7 @@ class _PerModuleState extends State<PerModule> {
 
       bool hasPermission = perms[permission] == true;
       if (!hasPermission) {
-        final androidKey = 'android.permission.${permission.toUpperCase()}';
+        final androidKey = 'android.permission.${permission}';
         hasPermission = perms[androidKey] == true;
       }
       return hasPermission;
