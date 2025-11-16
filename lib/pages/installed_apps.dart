@@ -1,5 +1,4 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
@@ -16,10 +15,10 @@ class InstalledAppsPage extends StatefulWidget {
   const InstalledAppsPage({super.key});
 
   @override
-  _InstalledAppsPageState createState() => _InstalledAppsPageState();
+  InstalledAppsPageState createState() => InstalledAppsPageState();
 }
 
-class _InstalledAppsPageState extends State<InstalledAppsPage>
+class InstalledAppsPageState extends State<InstalledAppsPage>
     with AutomaticKeepAliveClientMixin {
   static const platform = MethodChannel('com.example.app_permissions/native');
   @override
@@ -183,30 +182,17 @@ class _InstalledAppsPageState extends State<InstalledAppsPage>
             backgroundColor: Colors.transparent,
             appBar: AppBar(
               backgroundColor: Colors.transparent,
-              title: Stack(
-                children: [
+              title:
                   // لایه بیرونی (خط دور)
                   Text(
                     'بررسی مجوزها بر اساس نرم افزار',
                     style: TextStyle(
-                      fontSize: isPhone ? 20 : 30,
-                      foreground: Paint()
-                        ..style = PaintingStyle.stroke
-                        ..strokeWidth =
-                            1 // ضخامت قاب
-                        ..color = Colors.white, // رنگ قاب
+                      fontSize: isPhone ? 17 : 25,
+
+                      color: Colors.black,
                     ),
                   ),
-                  // لایه درونی (متن اصلی)
-                  Text(
-                    'بررسی مجوزها بر اساس نرم افزار',
-                    style: TextStyle(
-                      fontSize: isPhone ? 20 : 30,
-                      color: Colors.black, // رنگ متن
-                    ),
-                  ),
-                ],
-              ),
+
               centerTitle: true,
               bottom: PreferredSize(
                 preferredSize: const Size.fromHeight(150),
@@ -242,7 +228,9 @@ class _InstalledAppsPageState extends State<InstalledAppsPage>
                                   },
                                 ),
                                 filled: true,
-                                fillColor: Colors.white.withOpacity(0.3),
+                                fillColor: Colors.white.withAlpha(
+                                  (0.3 * 255).toInt(),
+                                ),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
                                   borderSide: BorderSide.none,

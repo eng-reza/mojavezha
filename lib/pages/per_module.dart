@@ -32,80 +32,61 @@ class _PerModuleState extends State<PerModule> {
   Widget build(BuildContext context) {
     final media = MediaQuery.of(context);
     final phoneOnPortrait =
-        media.size.width < 600 && media.orientation == Orientation.landscape;
+        media.size.width < 600 && media.orientation == Orientation.portrait;
 
-    final size = MediaQuery.of(context).size;
-    bool isPhone = size.width < 600;
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.transparent,
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.lightBlueAccent,
 
-        title: Stack(
-          children: [
-            // لایه بیرونی (خط دور)
-            Text(
-              'بررسی مجوزها بر اساس نوع دسترسی',
-              style: TextStyle(
-                fontSize: isPhone ? 20 : 30,
-                foreground: Paint()
-                  ..style = PaintingStyle.stroke
-                  ..strokeWidth =
-                      1 // ضخامت قاب
-                  ..color = Colors.white, // رنگ قاب
-              ),
+          title: Text(
+            'بررسی مجوزها بر اساس نوع دسترسی',
+            style: TextStyle(
+              fontSize: phoneOnPortrait ? 17 : 20,
+              color: Colors.black, // رنگ متن
             ),
-            // لایه درونی (متن اصلی)
-            Text(
-              'بررسی مجوزها بر اساس نوع دسترسی',
-              style: TextStyle(
-                fontSize: isPhone ? 20 : 30,
-                color: Colors.black, // رنگ متن
-              ),
-            ),
-          ],
+          ),
+
+          centerTitle: true,
         ),
-
-        centerTitle: true,
+        body: loading
+            ? Container(
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Colors.lightBlueAccent, Colors.blue.shade700],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                  ),
+                ),
+                child: Center(
+                  child: Lottie.asset(
+                    'assets/json/Material wave loading.json',
+                    width: 200,
+                    height: 200,
+                  ),
+                ),
+              )
+            : Container(
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Colors.lightBlueAccent, Colors.blue.shade700],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                  ),
+                ),
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(height: phoneOnPortrait ? 50 : 30),
+                      Expanded(child: _buildPermissionList(context)),
+                    ],
+                  ),
+                ),
+              ),
       ),
-      body: loading
-          ? Container(
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [Colors.lightBlueAccent, Colors.blue.shade700],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                ),
-              ),
-              child: Center(
-                child: Lottie.asset(
-                  'assets/json/Material wave loading.json',
-                  width: 200,
-                  height: 200,
-                ),
-              ),
-            )
-          : Container(
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [Colors.lightBlueAccent, Colors.blue.shade700],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                ),
-              ),
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(height: phoneOnPortrait ? 50 : 30),
-                    Expanded(child: _buildPermissionList(context)),
-                  ],
-                ),
-              ),
-            ),
     );
   }
 
@@ -155,7 +136,7 @@ class _PerModuleState extends State<PerModule> {
     final media = MediaQuery.of(context);
     final phoneOnPortrait =
         media.size.width < 600 && media.orientation == Orientation.portrait;
-    final Map<String, String> PermissionsName = {
+    final Map<String, String> permissionsName = {
       'android.permission.FOREGROUND_SERVICE_CAMERA': 'دوربین',
       'android.permission.FOREGROUND_SERVICE_MICROPHONE': 'میکروفن',
       'android.permission.FOREGROUND_SERVICE_LOCATION': 'لوکیشن',
@@ -190,13 +171,13 @@ class _PerModuleState extends State<PerModule> {
       'android.permission.NFC': Icons.nfc_sharp,
       'android.permission.READ_BASIC_PHONE_STATE': Icons.info_sharp,
     };
-    final entries = PermissionsName.entries.toList();
+    final entries = permissionsName.entries.toList();
 
     return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
+      // shrinkWrap: true,
+      // physics: const NeverScrollableScrollPhysics(),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: phoneOnPortrait ? 2 : 4,
+        crossAxisCount: phoneOnPortrait ? 2 : 3,
         crossAxisSpacing: phoneOnPortrait ? 5 : 10,
         mainAxisSpacing: phoneOnPortrait ? 15 : 20,
         childAspectRatio: phoneOnPortrait ? 3 : 4,
@@ -256,7 +237,7 @@ class _PerModuleState extends State<PerModule> {
 
       bool hasPermission = perms[permission] == true;
       if (!hasPermission) {
-        final androidKey = 'android.permission.${permission}';
+        final androidKey = 'android.permission.$permission';
         hasPermission = perms[androidKey] == true;
       }
       return hasPermission;

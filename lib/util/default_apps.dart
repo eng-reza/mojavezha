@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 final Set<String> defaultApps = {
   'com.samsung.android.calculator',
   'com.samsung.android.voicerecorder',

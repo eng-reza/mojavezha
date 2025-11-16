@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:installed_apps/app_info.dart';
-import 'package:mojavezha/services/log_to_device.dart';
 import '../util/permissions_fa.dart';
 import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
