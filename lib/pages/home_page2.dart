@@ -215,7 +215,7 @@ class _HomePageState extends State<HomePage>
                             ),
                             const SizedBox(height: 8),
                             Text(
-                              'شفافیت در دسترسی‌های اپ‌ها روی دستگاه شما',
+                              'در جریان مجوزهایی که به نرم افزارهایتان داده اید باشید !',
                               style: TextStyle(
                                 fontSize: isPhone
                                     ? 13 * textScale
@@ -246,6 +246,9 @@ class _HomePageState extends State<HomePage>
                             ],
                             onTap: () {
                               HapticFeedback.lightImpact();
+                              SystemChrome.setPreferredOrientations(
+                                DeviceOrientation.values,
+                              );
                               Navigator.pushNamed(context, '/perModule');
                             },
                           ),
@@ -292,7 +295,7 @@ class _HomePageState extends State<HomePage>
                               color: Colors.white70,
                             ),
                             label: const Text(
-                              'درباره مجوزها',
+                              'درباره نرم افزار',
                               style: TextStyle(color: Colors.white70),
                             ),
                           ),
