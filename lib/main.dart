@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:mojavezha/pages/home_page.dart';
+import 'package:mojavezha/pages/about_page.dart';
+import 'package:mojavezha/pages/home_page2.dart';
 import 'pages/installed_apps.dart';
 import 'pages/per_module.dart';
 
@@ -27,9 +28,10 @@ class MyApp extends StatelessWidget {
 
       initialRoute: '/home',
       routes: {
-        '/home': (context) => const HomePage(),
+        '/home': (context) => HomePage(),
         '/installedApps': (context) => InstalledAppsPage(),
         '/perModule': (context) => PerModule(),
+        '/about': (context) => AboutPage(),
       },
     );
   }

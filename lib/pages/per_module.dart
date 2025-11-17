@@ -37,7 +37,7 @@ class _PerModuleState extends State<PerModule> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.lightBlueAccent,
+          backgroundColor: Color(0xFFB3E5FC),
 
           title: Text(
             'بررسی مجوزها بر اساس نوع دسترسی',
@@ -62,20 +62,14 @@ class _PerModuleState extends State<PerModule> {
                 child: Center(
                   child: Lottie.asset(
                     'assets/json/Material wave loading.json',
-                    width: 200,
-                    height: 200,
+                    width: 100,
+                    height: 100,
                   ),
                 ),
               )
             : Container(
                 alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [Colors.lightBlueAccent, Colors.blue.shade700],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                  ),
-                ),
+                decoration: _buildBackgroundDecoration(),
                 child: Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -90,6 +84,17 @@ class _PerModuleState extends State<PerModule> {
     );
   }
 
+  // متد تنظیم گرادیانت بک گراند //
+  BoxDecoration _buildBackgroundDecoration() {
+    return const BoxDecoration(
+      gradient: LinearGradient(
+        colors: [Color(0xFFB3E5FC), Color(0xFF64B5F6), Color(0xFF1976D2)],
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+      ),
+    );
+  }
+
   Future<void> loadApps() async {
     setState(() => loading = true);
     try {
@@ -99,7 +104,7 @@ class _PerModuleState extends State<PerModule> {
 
       apps = list;
       for (var app in apps) {
-        logger.i('Apps recieved : ${app.name}');
+        // logger.i('Apps recieved : ${app.name}');
         final perms = await _getPermissions(app.packageName);
         appPermissionStates[app.packageName] = perms;
       }
@@ -119,9 +124,9 @@ class _PerModuleState extends State<PerModule> {
         'packageName': packageName,
       });
       //اینجا پرمیشن های هر اپ  چک میشه //
-      logger.i('Permissions for $packageName');
+      // logger.i('Permissions for $packageName');
       (result as Map).forEach((key, value) {
-        logger.i('   $key => $value');
+        // logger.i('   $key => $value');
       });
 
       return Map<String, bool>.from(result.cast<String, bool>());
@@ -215,7 +220,7 @@ class _PerModuleState extends State<PerModule> {
                         permName.isNotEmpty ? permName : permKey,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                          color: Colors.black,
+                          color: Colors.white,
                           fontSize: phoneOnPortrait ? 15 : 18,
                         ),
                       ),

@@ -1335,7 +1335,7 @@ PermissionInfo translatePermission(String permission) {
       Icons.nfc_outlined,
       'استفاده از فناوری NFC',
     ),
-    RegExp(r'android.permission.BLUETOOTH_CONNECT'): PermissionInfo(
+    RegExp(r'android.permission.BLUETOOTH'): PermissionInfo(
       'اتصال بلوتوث',
       Icons.bluetooth_outlined,
       'اتصال به دستگاه‌های بلوتوث',

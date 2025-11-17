@@ -122,8 +122,8 @@ class InstalledAppsPageState extends State<InstalledAppsPage>
       return Center(
         child: Lottie.asset(
           'assets/json/Material wave loading.json',
-          width: 200,
-          height: 200,
+          width: 100,
+          height: 100,
         ),
       );
     }
@@ -171,13 +171,7 @@ class InstalledAppsPageState extends State<InstalledAppsPage>
       length: 2,
       child: SafeArea(
         child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Colors.lightBlueAccent, Colors.blue.shade700],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            ),
-          ),
+          decoration: _buildBackgroundDecoration(),
           child: Scaffold(
             backgroundColor: Colors.transparent,
             appBar: AppBar(
@@ -213,9 +207,11 @@ class InstalledAppsPageState extends State<InstalledAppsPage>
                               onChanged: _onSearchChanged,
                               decoration: InputDecoration(
                                 focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white70),
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white70),
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 hintText: 'جست‌وجوی برنامه...',
@@ -278,6 +274,17 @@ class InstalledAppsPageState extends State<InstalledAppsPage>
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  // متد گرادیانت بک گراند //
+  BoxDecoration _buildBackgroundDecoration() {
+    return const BoxDecoration(
+      gradient: LinearGradient(
+        colors: [Color(0xFFB3E5FC), Color(0xFF64B5F6), Color(0xFF1976D2)],
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
       ),
     );
   }
