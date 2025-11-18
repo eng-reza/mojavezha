@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:mojavezha/util/text_scaler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import '../widgets/animated_logo.dart';
@@ -166,8 +167,6 @@ class _HomePageState extends State<HomePage>
   // ---------------- ورود به UI ----------------
   @override
   Widget build(BuildContext context) {
-    final textScale = MediaQuery.textScaleFactorOf(context).clamp(1.0, 1.3);
-
     return Scaffold(
       body: SafeArea(
         child: FadeTransition(
@@ -206,9 +205,11 @@ class _HomePageState extends State<HomePage>
                             Text(
                               'مجوزها',
                               style: TextStyle(
-                                fontSize: isPhone
-                                    ? 18 * textScale
-                                    : 22 * textScale,
+                                fontSize: TextScalerUtil.getScaledFont(
+                                  context,
+                                  base: isPhone ? 18 : 22,
+                                ),
+
                                 fontWeight: FontWeight.w700,
                                 color: Colors.white,
                               ),
@@ -217,9 +218,10 @@ class _HomePageState extends State<HomePage>
                             Text(
                               'در جریان مجوزهایی که به نرم افزارهایتان داده اید باشید !',
                               style: TextStyle(
-                                fontSize: isPhone
-                                    ? 13 * textScale
-                                    : 14 * textScale,
+                                fontSize: TextScalerUtil.getScaledFont(
+                                  context,
+                                  base: isPhone ? 13 : 14,
+                                ),
                                 color: Colors.black,
                               ),
                             ),
@@ -262,6 +264,7 @@ class _HomePageState extends State<HomePage>
                               FontAwesomeIcons.chrome,
                               FontAwesomeIcons.instagram,
                               FontAwesomeIcons.telegram,
+                              FontAwesomeIcons.whatsapp,
                             ],
                             onTap: () {
                               HapticFeedback.lightImpact();

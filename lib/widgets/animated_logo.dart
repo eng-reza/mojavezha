@@ -57,15 +57,15 @@ class AnimatedLogoState extends State<AnimatedLogo>
             shape: BoxShape.circle,
             gradient: LinearGradient(
               colors: [
-                Colors.white.withOpacity(0.14),
-                Colors.white.withOpacity(0.06),
+                Colors.white.withAlpha((255 * 0.14).toInt()),
+                Colors.white.withAlpha((255 * 0.06).toInt()),
               ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.18),
+                color: Colors.black.withAlpha((255 * 0.18).toInt()),
                 blurRadius: 18,
                 offset: const Offset(0, 6),
               ),

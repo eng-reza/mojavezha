@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:mojavezha/util/text_scaler.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 class AboutPage extends StatefulWidget {
@@ -83,20 +84,21 @@ class _AboutPageState extends State<AboutPage> {
                       Container(
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.85),
+                          color: Colors.white.withAlpha((255 * 0.85).toInt()),
                           borderRadius: BorderRadius.circular(16),
                         ),
-                        child: const Text(
+                        child: Text(
                           '''
 اپلیکیشن‌ها برای کارکرد درست خود نیاز به دسترسی‌هایی مانند دوربین، میکروفون، موقعیت مکانی و ... دارند. اما گاهی برخی برنامه‌ها بیش از اندازه دسترسی دریافت می‌کنند که می‌تواند تهدیدی برای حریم خصوصی شما باشد.
-
+                                  
 اپلیکیشن «مجوزها» با هدف شفاف‌سازی، این امکان را فراهم می‌کند تا:
-• بدانید هر اپ به چه مجوزهایی دسترسی دارد  
-• مجوزهای حساس مانند دوربین و میکروفون را کنترل کنید  
-• دسترسی‌های غیرضروری را شناسایی کنید  
+• بدانید هر اپ به چه مجوزهایی دسترسی دارد
+• مجوزهای حساس مانند دوربین و میکروفون را کنترل کنید
+• دسترسی‌های غیرضروری را شناسایی کنید
 • از مصرف پنهان داده و باتری جلوگیری کنید
                           ''',
                           textAlign: TextAlign.justify,
+                          textDirection: TextDirection.rtl,
                           style: TextStyle(fontSize: 14, color: Colors.black87),
                         ),
                       ),
@@ -166,11 +168,15 @@ class _AboutPageState extends State<AboutPage> {
   }
 
   Widget _buildPermissionItem(IconData icon, String title, String description) {
+    final size = MediaQuery.of(context).size;
+    final width = size.width;
+    final isPhone = width < 600;
+
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 6),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.92),
+        color: Colors.white.withAlpha((255 * 0.92).toInt()),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -183,8 +189,11 @@ class _AboutPageState extends State<AboutPage> {
               children: [
                 Text(
                   title,
-                  style: const TextStyle(
-                    fontSize: 15,
+                  style: TextStyle(
+                    fontSize: TextScalerUtil.getScaledFont(
+                      context,
+                      base: isPhone ? 15 : 17,
+                    ),
                     fontWeight: FontWeight.w600,
                   ),
                 ),
